@@ -14,17 +14,26 @@ class Headquarters extends Component {
     return(
       <Grid celled='internally'>
         <Grid.Column width={8}>
-          <ColdStorage hosts={this.props.hosts} handleClick={this.props.handleClick}/>
+          <ColdStorage
+            hosts={this.props.hosts}
+            handleClick={this.props.handleClick}
+            selectedHost={this.props.selectedHost}
+            />
         {/* Something goes here.... */}
 
         </Grid.Column>
         <Grid.Column width={5}>
           <Details selectedHost={this.props.selectedHost}
             areas={this.props.areas}
+            toggleHost={this.props.toggleHost}
+            changeHostArea={this.props.changeHostArea}
           />
         </Grid.Column>
         <Grid.Column width={3}>
-          <LogPanel />
+          <LogPanel
+            hosts={this.props.hosts}
+            toggleAllActivate={this.props.toggleAllActivate}
+          />
         {/* and here. Take visual cues from the screenshot/video in the Readme. */}
 
         </Grid.Column>

@@ -14,7 +14,10 @@ const Area = (props) => {
   return(
     <div className='area' id={props.name}>
       <h3 className='labels'>{formatName(props.name)}</h3>
-      <HostList hosts={props.hosts}/>
+      <HostList hosts={props.hosts}
+        handleClick={props.handleClick}
+        selectedHost={props.selectedHost}
+      />
       {/* See Checkpoint 1 item 2 in the Readme for a clue as to what goes here */}
 
     </div>

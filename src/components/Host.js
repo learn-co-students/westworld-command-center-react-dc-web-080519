@@ -3,14 +3,25 @@ import '../stylesheets/Host.css'
 import { Card } from 'semantic-ui-react'
 
 const Host = (props) => {
-  return(
-    <Card
-      className="host"
 
+  const returnClassName = () => {
+    if (props.selectedHost === null){
+      return "host"
+    }
+    else if (props.selectedHost.id === props.host.id){
+      return "host selected"
+    }
+    else {
+      return "host"
+    }
+  }
+  return(
+      <Card
+      className={returnClassName()}
       onClick={() => {props.handleClick(props.host)}}
       image={props.host.imageUrl}
       raised
-    />
+      />
   )
 }
 

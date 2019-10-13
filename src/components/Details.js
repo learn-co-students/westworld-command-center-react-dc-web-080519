@@ -25,6 +25,8 @@ const Details = (props) => {
             }
           })
           }
+        toggleHost={props.toggleHost}
+        changeHostArea={props.changeHostArea}
         />}
     </Segment>
   )

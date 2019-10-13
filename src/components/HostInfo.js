@@ -4,36 +4,25 @@ import { Radio, Icon, Card, Grid, Image, Dropdown, Divider } from 'semantic-ui-r
 
 
 class HostInfo extends Component {
-  state = {
-    options: [
-      ...this.props.areaOptions
-    ],
-    value: null
-    // This state is just to show how the dropdown component works.
-    // Options have to be formatted in this way (array of objects with keys of: key, text, value)
-    // Value has to match the value in the object to render the right text.
-
-    // IMPORTANT: But whether it should be stateful or not is entirely up to you. Change this component however you like.
-  }
 
 
 
   handleChange = (e, {value}) => {
+    this.props.changeHostArea(this.props.selectedHost, value)
     // the 'value' attribute is given via Semantic's Dropdown component.
     // Put a debugger in here and see what the "value" variable is when you pass in different options.
     // See the Semantic docs for more info: https://react.semantic-ui.com/modules/dropdown/#usage-controlled
   }
 
   toggle = () => {
-    console.log("The radio button fired");
+    this.props.toggleHost(this.props.selectedHost, !(this.props.selectedHost.active))
   }
 
 
 
   render(){
-    let {imageUrl, firstName, gender, area, authorized} = this.props.selectedHost
+    let {imageUrl, firstName, gender, area, active} = this.props.selectedHost
 
-    console.log(this.props)
     return (
       <Grid>
         <Grid.Column width={6}>
@@ -49,25 +38,31 @@ class HostInfo extends Component {
             <Card.Content>
               <Card.Header>
                 {firstName} | { gender === "Male" ? <Icon name='man' /> : <Icon name='woman' />}
-                { /* Think about how the above should work to conditionally render the right First Name and the right gender Icon */ }
               </Card.Header>
               <Card.Meta>
+                {active === true ?
+                  <Radio
+                    onChange={this.toggle}
+                    label={"Active"}
+                    checked={true}
+
+                    slider
+                  />
+                :
                 <Radio
                   onChange={this.toggle}
-                  label={"Active"}
-
-                  checked={true}
-
+                  label={"Decommissioned"}
+                  checked={false}
                   slider
-                />
+                />}
               </Card.Meta>
 
               <Divider />
               Current Area:
               <Dropdown
                 onChange={this.handleChange}
-                value={this.props.selectedHost.area}
-                options={this.state.options}
+                value={area}
+                options={this.props.areaOptions}
                 selection
               />
             </Card.Content>
