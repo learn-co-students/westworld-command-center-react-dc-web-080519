@@ -32,6 +32,7 @@ class Headquarters extends Component {
         <Grid.Column width={3}>
           <LogPanel
             hosts={this.props.hosts}
+            logs={this.props.logs}
             toggleAllActivate={this.props.toggleAllActivate}
           />
         {/* and here. Take visual cues from the screenshot/video in the Readme. */}

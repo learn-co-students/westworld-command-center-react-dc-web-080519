@@ -8,7 +8,10 @@ class HostInfo extends Component {
 
 
   handleChange = (e, {value}) => {
-    this.props.changeHostArea(this.props.selectedHost, value)
+
+    let newName = value.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1))
+
+    this.props.changeHostArea(this.props.selectedHost, value, newName.join(" "))
     // the 'value' attribute is given via Semantic's Dropdown component.
     // Put a debugger in here and see what the "value" variable is when you pass in different options.
     // See the Semantic docs for more info: https://react.semantic-ui.com/modules/dropdown/#usage-controlled

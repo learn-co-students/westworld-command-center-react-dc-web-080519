@@ -3,6 +3,7 @@ import './stylesheets/App.css'
 import { Segment } from 'semantic-ui-react';
 import WestworldMap from './components/WestworldMap'
 import Headquarters from './components/Headquarters'
+import { Log } from './services/Log'
 
 
 
@@ -12,7 +13,8 @@ class App extends Component {
     this.state = {
       areas: [],
       hosts: [],
-      selectedHost: null
+      selectedHost: null,
+      logs: []
     }
   }
   // As you go through the components given you'll see a lot of functional components.
@@ -47,20 +49,42 @@ class App extends Component {
     })
 
     this.updateHostAndSelHost(activatedHost, hostObj, "active", activeStatus)
+
+    let newLog = [...this.state.logs]
+
+    if (activeStatus) {
+      newLog.unshift(Log.warn(`Activated ${hostObj.firstName}`))
+    }
+    else {
+      newLog.unshift(Log.notify(`Decommissioned ${hostObj.firstName}`))
+    }
+    this.setState({
+      logs: newLog
+    })
   }
 
-  changeHostArea = (hostObj, value) => {
+  changeHostArea = (hostObj, value, formatName) => {
     let limit = this.state.areas.find(area=> area.name === value).limit
-    if (this.state.hosts.filter(host => host.area === value).length >= limit) {
-      alert(`Too many hosts in ${value} the limit is ${limit}`)
+    let hostsInArea = this.state.hosts.filter(host => host.area === value)
+    let newLog = [...this.state.logs]
+
+    if (hostsInArea.filter(host => host.id === hostObj.id).length === 1) {
+      newLog.unshift(Log.notify(`${hostObj.firstName} is already set in area ${formatName}`))
+    }
+    else if (hostsInArea.length === limit) {
+      newLog.unshift(Log.error(`Too many hosts. Cannot add ${hostObj.firstName} to ${formatName}`))
     }
     else {
       let changedHost = this.state.hosts.map(host => {
         return (host.id !== hostObj.id ? host : {...hostObj, area: value})
       })
       this.updateHostAndSelHost(changedHost, hostObj, "area", value)
+      newLog.unshift(Log.notify(`${hostObj.firstName} set in area ${formatName}`))
     }
-    console.log(limit)
+    this.setState({
+      logs: newLog
+    })
+
 
   }
 
@@ -73,6 +97,8 @@ class App extends Component {
 
   toggleAllActivate = (activateStatus) => {
     let newArray = this.state.hosts.map(host => {return {...host, active: activateStatus} })
+    let newLog = [...this.state.logs]
+
     if (this.state.selectedHost) {
       this.setState({
         selectedHost: {...this.state.selectedHost, active: activateStatus}
@@ -80,6 +106,17 @@ class App extends Component {
     }
     this.setState({
       hosts: newArray
+    })
+
+    if (activateStatus) {
+      newLog.unshift(Log.warn("Activating all hosts!"))
+    }
+    else {
+      newLog.unshift(Log.notify("Decommissioning all hosts."))
+    }
+
+    this.setState({
+      logs: newLog
     })
   }
 
@@ -101,6 +138,7 @@ class App extends Component {
           areas={this.state.areas}
           changeHostArea={this.changeHostArea}
           toggleAllActivate={this.toggleAllActivate}
+          logs={this.state.logs}
         />
       </Segment>
     )
