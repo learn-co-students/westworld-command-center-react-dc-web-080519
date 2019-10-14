@@ -14,17 +14,30 @@ const Details = (props) => {
       return newName.join(" ");
   }
 
+  const areaOptionsFormat= () => {
+    let areaOptions = props.areas.map(area => {
+      return {key: area.name,
+        text: formatName(area.name),
+        value: area.name
+        }
+      })
+
+    return areaOptions.sort((a,b) => {
+      if(a.text < b.text) {
+        return -1;
+      }
+      if(a.text > b.text) {
+        return 1;
+      }
+    })
+
+  }
+
   return(
     <Segment id="details" className="HQComps">
       {props.selectedHost === null ? renderSomething() :
       <HostInfo selectedHost={props.selectedHost}
-        areaOptions={props.areas.map(area => {
-          return {key: area.name,
-            text: formatName(area.name),
-            value: area.name
-            }
-          })
-          }
+        areaOptions={areaOptionsFormat()}
         toggleHost={props.toggleHost}
         changeHostArea={props.changeHostArea}
         />}
